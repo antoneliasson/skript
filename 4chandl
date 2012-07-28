@@ -1,8 +1,8 @@
 #!/bin/bash
 # A bash script for downloading all images in a 4chan thread to their original
-# filenames. Updates every 30 seconds until canceled or the thread disappears.
+# filenames. Updates every 60 seconds until canceled or the thread disappears.
 # 
-# Copyright 2008, 2010 Daniel Triendl, Anton Eliasson
+# Copyright 2008, 2010, 2012 Daniel Triendl, Anton Eliasson
 # http://blog.pew.cc/blog/4chan+download+script/
 # http://antoneliasson.wordpress.com/2010/08/03/4chan-download-script/
 # 
@@ -59,7 +59,7 @@ while [ "1" = "1" ]; do
 	grep -E -o 'http://images.4chan.org/[a-z0-9]+/src/([0-9]*).(jpg|png|gif)' "$thread" | uniq | tr "\n" " " > "$links"
 
 	# get original file name list, space separated (spaces in filenames changed to underlines)
-	sed 's/ /_/g' "$thread" | grep -E -o '<span_title=\"[[:alnum:]_-]*.*(jpg|png|gif)' | awk -F \" '{print $2}' | tr "\n" " " > "$names"
+	sed 's/ /_/g' "$thread" | grep -E -o '<span_title="[^"]+' | awk -F \" '{print $2}' | tr "\n" " " > "$names"
 
 	COUNT=`cat $names | wc -w` # total number of files/names
 	for ((i=1; i<=$COUNT; i++)); do
