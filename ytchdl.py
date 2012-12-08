@@ -5,11 +5,17 @@ Created on 27 October 2012
 @author: Anton Eliasson <devel@antoneliasson.se>
 
 Planned features:
-* Split the playlist into two files. One M3U playlist containing only the filenames
-  for the user and a hidden file containing the URLs for the script. The playlist can
+* Split the url_file into two files. One M3U url_file containing only the filenames
+  for the user and a hidden url_file containing the URLs for the script. The url_file can
   then be modified freely by the user without affecting the scripts ability to update.
 * Add an update option which takes no other arguments but rather reads the channel
-  name from the hidden file.
+  name from the hidden url_file.
+
+Known bugs and limitations:
+* youtube-dl might take the initiative to download the MP4 version if there's no WebM version available.
+
+Changelog:
+1. First stable version. Stores downloaded URLs in the url_file url_file.
 
 '''
 
@@ -49,7 +55,7 @@ def get_feed_links(channel, skip):
     return (feed.status, downloads)
 
 def download(downloads):
-    elements = []
+    filenames = []
     for url in downloads:
         logging.info("Downloading %s" % url)
         # TODO: add non-free MP4 as option
@@ -60,50 +66,59 @@ def download(downloads):
             output = subprocess.check_output(cmd).decode()
             lines = output.split('\n')
             filename = lines[4][24:]
-            elements.append((url, filename))
+            filenames.append(filename)
         except OSError as e:
             logging.error("Could not execute %s: %s" % (program, e.strerror))
-    return elements
+    return filenames
 
-def import_playlist(filename):
-    links = []
+def import_urls(filename):
+    urls = []
     # FIXME: change the try block to a with block
     try:
-        playlist = open(filename)
+        url_file = open(filename)
     except FileNotFoundError:
-        return links
+        return urls
     
-    line = playlist.readline()
+    # throw away the beginning comments
+    url_file.readline()
+    url_file.readline()
+    
+    line = url_file.readline()
     while line:
-        # remove hash and space in the beginning and newline in the end of the string
-        link = line[2:-1]
-        links.append(link)
-        # throw away the filename on the line after the comment
-        playlist.readline()
-        line = playlist.readline()
-    playlist.close()
-    return links
+        urls.append(line.strip())
+        line = url_file.readline()
+    url_file.close()
+    return urls
 
-def export_playlist(filename, elements):
-    # TODO: overwrite the file with old + new elements instead of appending
-    # FIXME: put this in a with block
-    playlist = open(filename, 'a')
+def export_playlist(playlist, filenames):
+    # FIXME: put this in a try/with block
+    playlist_file = open(playlist, 'a')
     
-    for element in elements:
-        comment = '# ' + element[0] + '\n'
-        file = element[1] + '\n'
-        playlist.write(comment + file)
-    playlist.close()
+    for filename in filenames:
+        print(filename)
+        playlist_file.write(filename + '\n')
+    playlist_file.close()
+
+def export_urls(filename, urls):
+    # FIXME: put this in a try/with block
+    url_file = open(filename, 'w')
+    
+    url_file.write('List of downloaded URLs by ytchdl.\n'
+    'Do not edit unless you know what you are doing.\n')
+    
+    for url in urls:
+        url_file.write(url + '\n')
+    url_file.close()
 
 if __name__ == "__main__":
     parser = OptionParser(
             usage="%prog [options] channel",
             version="%prog 0.1")
-    parser.add_option("-p","--playlist",
+    parser.add_option("-p","--url_file",
             dest="playlist",
             default="",
             action="store",
-            help="M3U playlist to use. Defaults to <channel>.m3u")
+            help="M3U url_file to use. Defaults to <channel>.m3u")
     parser.add_option("-u","--urls-only",
             dest="urls_only",
             default=False,
@@ -130,11 +145,13 @@ if __name__ == "__main__":
     channel = args[0].lower()
     
     if options.playlist:
-        playlist = options.playlist
-        # FIXME: fail if specified playlist file does not exist
+        playlist_file = options.playlist
+        # FIXME: fail if specified url_file url_file does not exist
     else:
-        playlist = channel + '.m3u'
-    skip = import_playlist(playlist)
+        playlist_file = channel + '.m3u'
+    
+    url_file = '.ytchdl'
+    skip = import_urls(url_file)
     
     (status, downloads) = get_feed_links(channel, skip)
     if status == 200:
@@ -143,8 +160,9 @@ if __name__ == "__main__":
             for url in downloads:
                 print(url)
         else:
-            elements = download(downloads)
-            export_playlist(playlist, elements)
+            filenames = download(downloads)
+            export_playlist(playlist_file, filenames)
+            export_urls(url_file, skip + downloads)
     elif status == 404:
         logging.error('Channel %s not found' % channel)
     else:
