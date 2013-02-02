@@ -76,13 +76,13 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description='Downloads images from 4chan')
-    parser.add_argument('thread_url')
+    parser.add_argument('thread')
     parser.add_argument('directory')
 
     args = parser.parse_args()
     thread_url = args.thread_url
     directory = args.directory
-    scheme, board, threadnumber = split_url(thread_url)
+    scheme, board, threadnumber = split_url(thread)
 
     posts = get_posts(scheme, board, threadnumber)
     files = get_file_urls(scheme, board, posts)
