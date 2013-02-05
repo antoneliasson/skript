@@ -4,7 +4,7 @@
 
 The successor to the original 4chandl script.
 
-Created 1 feb 2013.
+Created: 1 feb 2013.
 
 @author: Anton Eliasson <devel@antoneliasson.se>
 
@@ -16,7 +16,7 @@ try:
     httplib2.debuglevel = 1
     hlib = httplib2.Http('.cache')
 except ImportError:
-    print('''This application requires httplib2. Search your Linux distribution's
+    print('''This application requires the Python library httplib2. Search your Linux distribution's
 packages or download the source here: http://code.google.com/p/httplib2/''')
     import sys
     sys.exit(1)
@@ -80,9 +80,9 @@ def main():
     parser.add_argument('directory')
 
     args = parser.parse_args()
-    thread_url = args.thread_url
+    thread_url = args.thread
     directory = args.directory
-    scheme, board, threadnumber = split_url(thread)
+    scheme, board, threadnumber = split_url(thread_url)
 
     posts = get_posts(scheme, board, threadnumber)
     files = get_file_urls(scheme, board, posts)
