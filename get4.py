@@ -60,14 +60,16 @@ def download_file(directory, url, filename, ext):
         print('URL {0} with original filename {1} failed to download with status {2}'.format(url, filename, response.status))
     for attempt in range(10):
         try:
-            if attempt:
-                fname = filename + '-{0}'.format(attempt)
+            if attempt > 0:
+                fname = 'filename-{}'.format(attempt)
             else:
                 fname = filename
             file = open(directory + fname + ext, 'xb')
             break
         except FileExistsError:
             continue
+    else:
+        print('{} kunde inte sparas'.format(filename)
     
     file.write(content)
     return filename
@@ -82,6 +84,7 @@ def main():
     args = parser.parse_args()
     thread_url = args.thread
     directory = args.directory
+    # säkerställ att: directory inte existerar | directory är en katalog & (directory är tom | -f används), annars sys.exit
     scheme, board, threadnumber = split_url(thread_url)
 
     posts = get_posts(scheme, board, threadnumber)
