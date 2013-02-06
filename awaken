@@ -5,7 +5,7 @@
 # Användning: awaken <datornamn>
 
 wake () {
-    /usr/bin/wakeonlan "$1"
+    /usr/bin/wol "$1"
 }
 
 if [ $1 ]; then
