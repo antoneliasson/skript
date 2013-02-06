@@ -1,0 +1,29 @@
+#!/bin/bash
+# Enkelt skript för att väcka en dator i nätverket via Wake On Lan
+# baserat på ett fördefinierat datornamn
+#
+# Användning: awaken <datornamn>
+
+wake () {
+    /usr/bin/wakeonlan "$1"
+}
+
+if [ $1 ]; then
+    # Minst ett argument
+    case "$1" in
+        riven)
+            echo "Väcker datorn \"$1\"..."
+            wake "00:1f:d0:26:74:91"
+            ;;
+        guardmaster)
+            echo "Väcker datorn \"$1\"..."
+            wake "00:25:90:72:B8:F4"
+            ;;
+        *)
+            echo "Känner inte till datorn \"$1\""
+            ;;
+    esac
+else
+    echo "Användning: $(basename $0) <datornamn>"
+fi
+
