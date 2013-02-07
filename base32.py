@@ -4,6 +4,8 @@ base32.py
 
 CLI base32 encoder/decoder.
 
+Too slow to be usable on big (>1MB) files, apparently.
+
 Created: 7 feb 2013.
 
 @author: Anton Eliasson <devel@antoneliasson.se>
