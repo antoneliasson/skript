@@ -15,9 +15,12 @@ def encode(file):
     return base64.b32encode(data)
 
 def decode(file):
-    data = file.read()
+    data = file.read().decode('ascii')
     data = data.strip().replace(' ', '').replace('\n', '')
     return base64.b32decode(data, casefold=True)
+
+def format(text, cols):
+    pass
 
 def main():
     import sys, argparse
@@ -29,17 +32,21 @@ def main():
                                      'or standard input, to standard output.', epilog='With no FILE, or when FILE is -, read standard input.')
     parser.add_argument('-d', '--decode', action='store_true', help='decode data')
     parser.add_argument('FILE', nargs='?', type=argparse.FileType('rb'), default=sys.stdin)
+    parser.add_argument('-w', '--wrap', default=76, help='wrap encoded lines after COLS character (default 76).')
 
     args = parser.parse_args()
 
     file = args.FILE
+    cols = args.wrap
 
     if args.decode:
-        print(decode(file).decode('ascii'))
+        print(decode(file).decode('ascii'), end='')
     else:
         result = encode(file).decode('ascii')
-        for line in result.split(sep='', maxsplit=76):
-            print(line)
+        i = 0
+        while i < len(result):
+            i += cols
+            print(result[i-cols:i])
 
 if __name__ == '__main__':
     main()
