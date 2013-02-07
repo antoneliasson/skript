@@ -69,7 +69,7 @@ def download_file(directory, url, filename, ext):
         except FileExistsError:
             continue
     else:
-        print('{} kunde inte sparas'.format(filename)
+        print('{} kunde inte sparas'.format(filename))
     
     file.write(content)
     return filename
