@@ -22,6 +22,10 @@ if [ $1 ]; then
             echo "Väcker datorn \"$1\"..."
             wake "00:1f:d0:26:74:91"
             ;;
+	avalon)
+            echo "Väcker datorn \"$1\"..."
+	    wake "00:1c:25:76:fd:ce"
+	    ;;
         guardmaster)
             echo "Väcker datorn \"$1\"..."
             wake "00:25:90:72:B8:F4"
