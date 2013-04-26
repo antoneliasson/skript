@@ -3,7 +3,7 @@
 src="$HOME"
 dest="file:///Athena/Backup/$(hostname)"
 
-duplicity --full-if-older-than 7D \
+duplicity --full-if-older-than 14D \
     --asynchronous-upload \
     --volsize 50 \
     --no-encryption \
