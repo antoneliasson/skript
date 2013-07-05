@@ -61,7 +61,7 @@ def download_file(directory, url, filename, ext):
     for attempt in range(10):
         try:
             if attempt > 0:
-                fname = 'filename-{}'.format(attempt)
+                fname = '{}-{}'.format(filename, attempt)
             else:
                 fname = filename
             file = open(directory + fname + ext, 'xb')
