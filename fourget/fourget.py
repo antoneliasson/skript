@@ -58,7 +58,7 @@ def download_file(directory, url, filename, ext):
     response, content = hlib.request(url)
     if response.status != 200:
         print('URL {0} with original filename {1} failed to download with status {2}'.format(url, filename, response.status))
-    for attempt in range(10):
+    for attempt in range(200): # magic number 200 >= max images per thread
         try:
             if attempt > 0:
                 fname = '{}-{}'.format(filename, attempt)
