@@ -6,12 +6,12 @@
 
 wake () {
     if [ -x /usr/bin/wol ]; then
-	/usr/bin/wol "$1"
+        /usr/bin/wol "$1"
     elif [ -x /usr/bin/wakeonlan ]; then
-	/usr/bin/wakeonlan "$1"
+        /usr/bin/wakeonlan "$1"
     else
-	echo "Hittade inget wake on lan-program att använda"
-	exit 1
+        echo "Hittade inget wake on lan-program att använda"
+        exit 1
     fi
 }
 
@@ -22,10 +22,10 @@ if [ $1 ]; then
             echo "Väcker datorn \"$1\"..."
             wake "00:1f:d0:26:74:91"
             ;;
-	avalon)
+        avalon)
             echo "Väcker datorn \"$1\"..."
-	    wake "00:1c:25:76:fd:ce"
-	    ;;
+            wake "00:1c:25:76:fd:ce"
+            ;;
         guardmaster)
             echo "Väcker datorn \"$1\"..."
             wake "00:25:90:72:B8:F4"
