@@ -3,7 +3,9 @@
 #
 # Created 2013-03-13
 
-import mutagen.mp4
+import mutagen
+import mutagen.flac
+import mutagen.easymp4
 import sys
 
 # constants
@@ -15,6 +17,16 @@ def usage():
     return '''Usage: albumartist_fixer.py <mp4 file>'''
 
 def main():
+    # This breaks pprint (among other things, probably). RegisterTextKey is supposed
+    # to be used for mapping a tag name (arg 1) to a list (of strings, arg 2). Here I
+    # map a tag name directly to a boolean (cpil). Since pprint expects all attributes
+    # to be iterable, it will fail on the 'compilation' attribute.
+    #
+    # The correct way to solve this would be to invent
+    # classmethod mutagen.easymp4.RegisterBoolKey(key, atomid)
+    # which would wrap the boolean in a list. I am going to avoid pprint instead.
+    mutagen.easymp4.EasyMP4Tags.RegisterTextKey('compilation', 'cpil')
+
     if len(sys.argv) != 2:
         # wrong number of arguments
         print(usage())
@@ -22,37 +34,44 @@ def main():
 
     filename = sys.argv[1]
     try:
-        audiofile = mutagen.mp4.MP4(filename)
-    except mutagen.mp4.MP4StreamInfoError:
-        print("'{}' does not look like a MP4 file.".format(filename))
-        sys.exit(2)
+        # only MP4 and FLAC are tested, but others may work
+        audiofile = mutagen.File(filename, options=[mutagen.easymp4.EasyMP4, mutagen.flac.FLAC],
+                                 easy=True)
     except IOError as ioe:
         print(ioe)
         sys.exit(ioe.errno)
-        
-    if ARTIST in audiofile and ALBUM_ARTIST in audiofile:
-        if len(audiofile[ARTIST]) == 1 and len(audiofile[ALBUM_ARTIST]) == 1:
+    if audiofile is None:
+        print('No handler available for file {}'.format(filename))
+        sys.exit(1)
+    else:
+        print('{} identified as {}'.format(filename, audiofile.mime[0]))
+
+    if 'artist' in audiofile and 'albumartist' in audiofile:
+        if len(audiofile['artist']) == 1 and len(audiofile['albumartist']) == 1:
             # swap tags
-            audiofile[ARTIST], audiofile[ALBUM_ARTIST] = audiofile[ALBUM_ARTIST], audiofile[ARTIST]
-            # mark track as part of a compilation
-            audiofile[PART_OF_COMPILATION] = True
+            audiofile['artist'], audiofile['albumartist'] = audiofile['albumartist'], audiofile['artist']
+            # maybe mark track as part of a compilation
+            if 'audio/mp4' in audiofile.mime:
+                print("{} is part of a compilation album (MP4 specific)".format(filename))
+                audiofile['compilation'] = True
             audiofile.save()
-            print("Tags successfully swapped in '{}'. New values:".format(filename))
-            print("Artist: " + audiofile[ARTIST][0])
-            print("Album artist: " + audiofile[ALBUM_ARTIST][0])
+            print("Tags successfully swapped. New values:")
+            print("Artist: " + audiofile['artist'][0])
+            print("Album artist: " + audiofile['albumartist'][0])
         else:
             # untested :3
             print('Too many or too few tags in file:')
-            print(audiofile.pprint())
+            from pprint import pprint
+            pprint(audiofile.items())
             print('Bailing out.')
-            sys.exit(4)
+            sys.exit(1)
     else:
-        if ARTIST in audiofile:
-            message = 'did not contain an ALBUM_ARTIST tag.'
-        elif ALBUM_ARTIST in audiofile:
+        if 'artist' in audiofile:
+            message = 'did not contain an ALBUMARTIST tag.'
+        elif 'albumartist' in audiofile:
             message = 'did not contain an ARTIST tag.'
         else:
-            message = 'did not contain an ARTIST and ALBUM_ARTIST tag.'
+            message = 'did not contain an ARTIST and ALBUMARTIST tag.'
         print("Failed. '" + filename + "' " + message)
         sys.exit(3)
 
