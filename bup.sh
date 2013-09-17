@@ -1,7 +1,7 @@
 #!/bin/bash
 
 src="$HOME"
-dest="hermes:/Athena/Backup/bup"
+dest="hyperion:/Athena/Backup/bup"
 branch="$(hostname)-$(whoami)"
 exclude_file="$HOME/.exclude-from-backup"
 
