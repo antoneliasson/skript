@@ -24,10 +24,6 @@ if [ $1 ]; then
             echo "Awakening host \"$1\"..."
             wake "00:1c:25:76:fd:ce"
             ;;
-        guardmaster)
-            echo "Awakening host \"$1\"..."
-            wake "00:25:90:72:B8:F4"
-            ;;
         *)
             echo "Hostname \"$1\" not known."
             exit 1
