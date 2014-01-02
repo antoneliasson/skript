@@ -24,7 +24,7 @@ Typically, this program is run as a cron job by a crontab entry like this:
 # Configuration
 smtp_address = 'mail.antoneliasson.se'
 sender_address = 'relay@antoneliasson.se' # E-mail 'From' field
-recipient_address = 'info@antoneliasson.se' # E-mail 'To' field
+recipient_address = 'root@antoneliasson.se' # E-mail 'To' field
 
 import urllib.request
 import re
