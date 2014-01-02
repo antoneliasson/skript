@@ -64,10 +64,8 @@ def update(ip):
 
 def compose(ip, wrote, sender, recipient):
     msg = MIMEText('')
-    if wrote:
-        msg.set_payload('New IP address: {}.'.format(ip))
-    else:
-        msg.set_payload('New IP address: {}.\n\nUnable to create config file!'.format(ip))
+    if not wrote:
+        msg.set_payload('Unable to create config file!')
     msg['Subject'] = 'IP address change on {}: {}'.format(gethostname(), ip)
     msg['From'] = sender
     msg['To'] = recipient
