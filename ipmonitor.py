@@ -36,6 +36,8 @@ from email.utils import formatdate
 from netrc import netrc
 from smtplib import SMTP
 
+from socket import gethostname
+
 def get_ip():
     with urllib.request.urlopen('http://dns.loopia.se/checkip/checkip.php') as f:
         html = f.read().decode('utf-8')
@@ -66,7 +68,7 @@ def compose(ip, wrote, sender, recipient):
         msg.set_payload('New IP address: {}.'.format(ip))
     else:
         msg.set_payload('New IP address: {}.\n\nUnable to create config file!'.format(ip))
-    msg['Subject'] = 'IP address change: {}'.format(ip)
+    msg['Subject'] = 'IP address change on {}: {}'.format(gethostname(), ip)
     msg['From'] = sender
     msg['To'] = recipient
     # RFC 2822, section 3.3: "The date and time-of-day SHOULD express local time."
