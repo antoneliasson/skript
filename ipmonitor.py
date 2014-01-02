@@ -4,13 +4,14 @@ IP Monitor
 
 Sends an e-mail if the network's external IP address has changed since last run.
 
-SMTP credentials are read from the user's ~/.netrc file. It expects an entry like this:
+SMTP credentials are read from the user's ~/.netrc file. It expects an entry
+like this:
 
     machine smtp.example.com
     login johndoe@example.com
     password supersecret
 
-where `machine` matches the `smtp_address` below and `login` is typically your
+where `machine` matches the `smtp_url` below and `login` is typically your
 e-mail address with or without the domain depending on your SMTP server.
 
 Typically, this program is run as a cron job by a crontab entry like this:
@@ -22,7 +23,7 @@ Typically, this program is run as a cron job by a crontab entry like this:
 """
 
 # Configuration
-smtp_address = 'mail.antoneliasson.se'
+smtp_url = 'mail.antoneliasson.se'
 sender_address = 'relay@antoneliasson.se' # E-mail 'From' field
 recipient_address = 'root@antoneliasson.se' # E-mail 'To' field
 
@@ -95,7 +96,7 @@ def main():
         else:
             print('Failed to write config')
         msg = compose(ip, wrote, sender_address, recipient_address)
-        send(msg, smtp_address, 587)
+        send(msg, smtp_url, 587)
         print('Sent e-mail')
 
 if __name__ == '__main__':
