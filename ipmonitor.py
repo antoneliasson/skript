@@ -63,10 +63,10 @@ def update(ip):
 def compose(ip, wrote, sender, recipient):
     msg = MIMEText('')
     if wrote:
-        msg.set_payload('New IP address: %s.' % ip)
+        msg.set_payload('New IP address: {}.'.format(ip))
     else:
-        msg.set_payload('New IP address: %s.\n\nUnable to create config file!' % ip)
-    msg['Subject'] = 'IP address change: %s' % ip
+        msg.set_payload('New IP address: {}.\n\nUnable to create config file!'.format(ip))
+    msg['Subject'] = 'IP address change: {}'.format(ip)
     msg['From'] = sender
     msg['To'] = recipient
     # RFC 2822, section 3.3: "The date and time-of-day SHOULD express local time."
@@ -88,7 +88,7 @@ def send(msg, server, port):
 def main():
     ip = get_ip()
     if not compare(ip):
-        print('New IP: %s' % ip)
+        print('New IP: {}'.format(ip))
         wrote = update(ip)
         if wrote:
             print('Wrote config')
