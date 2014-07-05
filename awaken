@@ -2,7 +2,7 @@
 # Simple bash script to power on a computer on the local network using Wake-on-Lan.
 # The ethernet hardware (MAC) address of each host is hard coded in this script.
 
-wake () {
+wakeup () {
     if [ -x /usr/bin/wol ]; then
         /usr/bin/wol "$1"
     elif [ -x /usr/bin/wakeonlan ]; then
@@ -18,11 +18,15 @@ if [ $1 ]; then
     case "$1" in
         riven)
             echo "Awakening host \"$1\"..."
-            wake "00:1f:d0:26:74:91"
+            wakeup "00:1f:d0:26:74:91"
             ;;
         avalon)
             echo "Awakening host \"$1\"..."
-            wake "00:1c:25:76:fd:ce"
+            wakeup "00:1c:25:76:fd:ce"
+            ;;
+        openelec)
+            echo "Awakening host \"$1\"..."
+            wakeup c8:60:00:cc:3e:d4
             ;;
         *)
             echo "Hostname \"$1\" not known."
