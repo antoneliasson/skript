@@ -24,7 +24,7 @@ if [ $1 ]; then
             echo "Awakening host \"$1\"..."
             wakeup "00:1c:25:76:fd:ce"
             ;;
-        openelec)
+        funktionell)
             echo "Awakening host \"$1\"..."
             wakeup c8:60:00:cc:3e:d4
             ;;
