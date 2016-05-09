@@ -16,7 +16,7 @@ wakeup () {
 if [ $1 ]; then
     # At least one argument supplied
     case "$1" in
-        riven)
+        q6600)
             echo "Awakening host \"$1\"..."
             wakeup "00:1f:d0:26:74:91"
             ;;
@@ -24,7 +24,7 @@ if [ $1 ]; then
             echo "Awakening host \"$1\"..."
             wakeup "00:1c:25:76:fd:ce"
             ;;
-        funktionell)
+        riven)
             echo "Awakening host \"$1\"..."
             wakeup c8:60:00:cc:3e:d4
             ;;
