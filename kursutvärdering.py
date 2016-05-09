@@ -34,15 +34,13 @@ import csv
 def main(filepath):
     ## INIT
     interesting = {
-        4 : list(), # Vad har varit bra, vad kan förbättras med musiken?
-        7 : list(), # Vad har varit bra, vad kan förbättras hos tränarna?
-        11 : list(), # Vad har varit bra, vad kan förbättras hos hjälptränarna?
-        15 : list(), # Vad har varit bra, vad kan förbättras med undervisningen?
-        19 : list(), # Vad har varit bra, vad kan förbättras med paus och fika?
-        22 : list(), # Något särskilt som du vill ha mer av?
-        26 : list(), # Vad har varit det bästa med kurserna?
-        27 : list(), # Vad kan förbättras med kurserna?
-        32 : list() # Övriga synpunkter på danssittningen:
+        2 : list(), # Vad har varit bra, vad kan förbättras med musiken?
+        3 : list(), # Vad har varit bra, vad kan förbättras hos tränarna?
+        4 : list(), # Vad har varit bra, vad kan förbättras hos hjälptränarna?
+        5 : list(), # Vad har varit bra, vad kan förbättras med undervisningen?
+        7 : list(), # Vad har varit bra, vad kan förbättras med paus och fika?
+        8 : list(), # Något särskilt som du vill ha mer av?
+        11 : list() # Vad kan förbättras med kurserna?
     }
 
     # LÄS
